@@ -3,10 +3,10 @@ package com.bibliotecas.model;
 import java.util.*;
 
 public class Biblioteca {
-    private List<Publicacion> publicaciones;
+    private final List<Publicacion> publicaciones;
     public Map<Integer, Usuario> usuarios; // Almacena los usuarios
-    private Map<Integer, List<Publicacion>> prestamosActivos; // Registra préstamos activos
-    private Queue<PublicacionPrestable> colaPrestamos; // Cola de espera para publicaciones prestadas
+    public Map<Integer, List<Publicacion>> prestamosActivos; // Registra préstamos activos
+    private final Queue<PublicacionPrestable> colaPrestamos; // Cola de espera para publicaciones prestadas
 
     public Biblioteca() {
         this.publicaciones = new ArrayList<>();
@@ -15,7 +15,7 @@ public class Biblioteca {
         this.colaPrestamos = new LinkedList<>();
     }
 
-    // Método para registrar un nuevo usuario
+    /// Metodo para registrar un nuevo usuario
     public void registrarUsuario(int id, String nombre) {
         if (usuarios.containsKey(id)) {
             System.out.println("El usuario con ID " + id + " ya está registrado.");
@@ -26,17 +26,17 @@ public class Biblioteca {
         System.out.println("Usuario registrado con éxito.");
     }
 
-    // Método para obtener un usuario por ID
+    /// Metodo para obtener un usuario por ID
     public Usuario obtenerUsuario(int id) {
         return usuarios.get(id);
     }
 
-    // Método para agregar una publicación a la biblioteca
+    /// Metodo para agregar una publicación a la biblioteca
     public void agregarPublicacion(Publicacion publicacion) {
         publicaciones.add(publicacion);
     }
 
-    // Método para listar publicaciones en la biblioteca
+    /// Metodo para listar publicaciones en la biblioteca
     public void listarPublicaciones() {
         System.out.println("---- LISTADO DE PUBLICACIONES ----");
 
@@ -62,7 +62,7 @@ public class Biblioteca {
         }
     }
 
-    // Método para buscar una publicación por título
+    /// Metodo para buscar una publicación por título
     public Publicacion buscarPublicacionPorTitulo(String titulo) {
         for (Publicacion p : publicaciones) {
             if (p.getTitulo().equalsIgnoreCase(titulo)) {
@@ -72,7 +72,7 @@ public class Biblioteca {
         return null;
     }
 
-    // Método para registrar un préstamo
+    /// Metodo para registrar un préstamo
     public void registrarPrestamo(int idUsuario, PublicacionPrestable publicacion) {
         if (!usuarios.containsKey(idUsuario)) {
             System.out.println("El usuario no está registrado. Regístrelo antes de continuar.");
@@ -100,7 +100,7 @@ public class Biblioteca {
         }
     }
 
-    // Método para registrar una devolución y gestionar la cola de espera
+    /// Metodo para registrar una devolución y gestionar la cola de espera
     public void registrarDevolucion(int idUsuario, PublicacionPrestable publicacion) {
         if (!usuarios.containsKey(idUsuario) || !prestamosActivos.containsKey(idUsuario)) {
             System.out.println("El usuario no tiene préstamos activos.");
@@ -113,6 +113,7 @@ public class Biblioteca {
 
         // Verificar la cola de espera
         if (!colaPrestamos.isEmpty()) {
+            System.out.println("La publicación estaba en espera para otro usuario.");
             PublicacionPrestable siguiente = colaPrestamos.poll();
             registrarPrestamo(idUsuario, siguiente);
         }
@@ -122,10 +123,11 @@ public class Biblioteca {
 
     }
 
-    // Método para mostrar los préstamos activos de un usuario
+    /// Metodo para mostrar los préstamos activos de un usuario
     public void mostrarPrestamosActivos(int idUsuario) {
         if (!prestamosActivos.containsKey(idUsuario)) {
             System.out.println("El usuario no tiene préstamos activos.");
+            System.out.println("\n");
             return;
         }
         System.out.println("Préstamos de " + usuarios.get(idUsuario).getNombre() + ":");
@@ -136,7 +138,7 @@ public class Biblioteca {
 
     }
 
-    // Método para ordenar las publicaciones por autor
+    /// Metodo para ordenar las publicaciones por autor
     public void ordenarPorAutor() {
         publicaciones.sort(new Publicacion.ComparadorPorAutor());
         System.out.println("Se han ordenado las publicaciones según su autor.");
@@ -144,7 +146,7 @@ public class Biblioteca {
 
     }
 
-    // Método para ordenar las publicaciones por título
+    /// Metodo para ordenar las publicaciones por título
     public void ordenarPorTitulo() {
         publicaciones.sort(new Publicacion.ComparadorPorTitulo());
         System.out.println("Se han ordenado las publicaciones según su título.");
